@@ -1,7 +1,6 @@
+    using System;
     using System.Collections;
     using UnityEngine;
-    using UnityEngine.Events;
-    using Vector3 = UnityEngine.Vector3;
 
     public class Mover : MonoBehaviour
     {
@@ -9,7 +8,7 @@
         private Coroutine _moveCoroutine;
         private Control _control;
 
-        public event UnityAction Moving;
+        public event Action Moving;
 
         private void Awake()
         {

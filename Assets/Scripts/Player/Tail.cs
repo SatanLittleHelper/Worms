@@ -13,7 +13,7 @@
         {
             _mover = FindObjectOfType<Mover>();
             _allMoveCoroutines = new List<Coroutine>();
-            _yPosition = _tailElements[0].GetComponent<MeshRenderer>().bounds.size.y / 2;
+            _yPosition = _tailElements[0].GetComponent<SpriteRenderer>().size.x / 2;
 
         }
 
@@ -36,17 +36,22 @@
         }
         private void ChangeTailPosition()
         {
-            var targetPosition = new Vector3(_player.transform.position.x, _yPosition, _player.transform.position.z);
+            var targetPosition = _player.transform.position;
             
             foreach (var tail in _tailElements)
             {
-                if ((targetPosition - tail.transform.position).sqrMagnitude > 
-                    tail.GetComponent<MeshRenderer>().bounds.size.z /2)
+                if ((targetPosition - tail.transform.position).sqrMagnitude >
+                    tail.GetComponent<SpriteRenderer>().size.SqrMagnitude() / 20)
+                {
+                    tail.transform.position = Vector3.MoveTowards(tail.transform.position, targetPosition, 
+                        _player.Speed * Time.deltaTime);
+                    targetPosition = tail.transform.position;
                     
-                    (tail.transform.position, targetPosition) = (targetPosition, tail.transform.position);
+                }
 
                 else
                     break;
+                
             }
             
         }
