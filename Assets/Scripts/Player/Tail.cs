@@ -7,13 +7,11 @@
         [SerializeField] private Player _player;
         private Mover _mover;
         private List<Coroutine> _allMoveCoroutines;
-        private float _yPosition;
 
         private void Awake()
         {
             _mover = FindObjectOfType<Mover>();
             _allMoveCoroutines = new List<Coroutine>();
-            _yPosition = _tailElements[0].GetComponent<SpriteRenderer>().size.x / 2;
 
         }
 
@@ -41,7 +39,7 @@
             foreach (var tail in _tailElements)
             {
                 if ((targetPosition - tail.transform.position).sqrMagnitude >
-                    tail.GetComponent<SpriteRenderer>().size.SqrMagnitude() / 20)
+                    tail.GetComponent<SpriteRenderer>().size.SqrMagnitude() / 50)
                 {
                     tail.transform.position = Vector3.MoveTowards(tail.transform.position, targetPosition, 
                         _player.Speed * Time.deltaTime);
