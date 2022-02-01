@@ -15,7 +15,7 @@
             _desk = FindObjectOfType<GameDesk>();
             _count = (int)_desk.Size.x * (int)_desk.Size.y / ((int)_desk.Size.x / 10) ;
             Spawn();
-            
+
         }
 
         private Vector3 GetRandomPositionForSpawn()
