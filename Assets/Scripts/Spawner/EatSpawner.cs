@@ -12,7 +12,7 @@
         private void Start()
         {
             _desk = FindObjectOfType<GameDesk>();
-            _count = (int)_desk.Size.x * (int)_desk.Size.y / ((int)_desk.Size.x / 10) ;
+            _count = (int)_desk.Size.x * (int)_desk.Size.y / 5 ;
             Spawn();
 
         }
