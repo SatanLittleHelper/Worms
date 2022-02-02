@@ -2,13 +2,11 @@
 
     public class GameDesk : MonoBehaviour
     {
-        private Vector2 _size;
+        public Vector2 Size { get; private set; }
 
-        public Vector2 Size => _size;
-
-        private void Start()
+        private void Awake()
         {
-            _size = transform.lossyScale;
+            Size = transform.localScale;
             
         }
 

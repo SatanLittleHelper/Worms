@@ -1,5 +1,4 @@
 
-    using System;
     using Unity.Mathematics;
     using UnityEngine;
     using Random = UnityEngine.Random;
@@ -7,7 +6,7 @@
     public class EatSpawner : MonoBehaviour
     {
         private int _count;
-        private String _EatPrefabPath = "Prefabs/Eat";
+        private const string _EatPrefabPath = "Prefabs/Eat";
         private GameDesk _desk;
         
         private void Start()
