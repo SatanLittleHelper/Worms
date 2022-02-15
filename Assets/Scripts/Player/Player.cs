@@ -3,70 +3,61 @@ using System;
 using UnityEngine;
 [RequireComponent(typeof(Mover))]
 [RequireComponent(typeof(Control))]
+[RequireComponent(typeof(SpeedUpControl))]
 
 public class Player : MonoBehaviour
 {
    [SerializeField] private float _speed = 5;
    private Mouth _mouth;
-   private Tail _tail;
-   private Control _control;
-   private int _score;
-   private int _minimumScore;
-   private bool _speedUpEnable;
+   private SpeedUpControl _speedUpControl;
+   private int _score = 10;
 
    public event Action Die;
    public event Action AddTailElement;
+   
    public Vector3 Direction { get; set; } = Vector3.left;
    public float Speed => _speed;
+   public int Score => _score;
 
    private void Awake()
    {
-       _control = GetComponent<Control>();
        _mouth = GetComponentInChildren<Mouth>();
-       _tail = FindObjectOfType<Tail>();
-       _score = _tail.Lenth * 2;
-       _minimumScore = _score;
+       _speedUpControl = GetComponent<SpeedUpControl>();
 
    }
 
    private void Update()
    {
        Debug.Log(_score);
+       
    }
 
    private void OnEnable()
    {
        _mouth.Eat += OnEat;
-       _control.SpeedUp += OnSpeedUp;
-       _control.SpeedDown += OnSpeedDown;
-       
+       _speedUpControl.ScoreChanged += OnScoreChanged;
+       _speedUpControl.SpeedChanged += OnSpeedChanged;
+
+
    }
 
    private void OnDisable()
    {
        _mouth.Eat -= OnEat;
-       _control.SpeedUp -= OnSpeedUp;
-       _control.SpeedDown -= OnSpeedDown;
+       _speedUpControl.ScoreChanged -= OnScoreChanged;
+       _speedUpControl.SpeedChanged -= OnSpeedChanged;
        
    }
 
-   private void OnSpeedDown()
+   private void OnSpeedChanged(float speed)
    {
-       if (_speedUpEnable)
-           _speed /= 2;
+       _speed = speed;
        
    }
 
-   private void OnSpeedUp()
+   private void OnScoreChanged(int score)
    {
-       if (_score <= _minimumScore)
-       {
-           _speedUpEnable = false;
-           return;
-       }
-       _speedUpEnable = true;
-       _speed *= 2;
-       _score -= 1;
+       _score += score;
        
    }
 
@@ -79,8 +70,6 @@ public class Player : MonoBehaviour
 
    private void CheckScoreForAddTailElement()
    {
-       if (_score == _minimumScore) return;
-       
        if (_score % 2 == 0)
            AddTailElement?.Invoke();
        

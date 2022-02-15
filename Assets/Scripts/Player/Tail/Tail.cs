@@ -9,15 +9,10 @@
         private Mover _mover;
         private List<Coroutine> _allMoveCoroutines;
         
-        
-        public int Lenth { get; private set; }
-
-
         private void Awake()
         {
             _mover = FindObjectOfType<Mover>();
             _allMoveCoroutines = new List<Coroutine>();
-            Lenth = _tailElements.Count;
 
         }
 
