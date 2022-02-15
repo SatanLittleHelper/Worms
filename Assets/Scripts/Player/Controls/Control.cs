@@ -7,6 +7,8 @@ public abstract class Control : MonoBehaviour
         private Camera _camera;
 
         public event Action DirectionChanged;
+        public event Action SpeedUp;
+        public event Action SpeedDown;
         
         private void Awake()
         {
@@ -17,11 +19,13 @@ public abstract class Control : MonoBehaviour
 
         protected virtual void Update()
         {
+            ChangeDirection(GetPositionInGameBoard(Input.mousePosition));
+
             if (Input.GetMouseButton(0))
-            {
-                ChangeDirection(GetPositionInGameBoard(Input.mousePosition));
-            
-            }
+                SpeedUp?.Invoke();
+            if (Input.GetMouseButtonUp(0))
+                SpeedDown?.Invoke();
+
         
         }
 
