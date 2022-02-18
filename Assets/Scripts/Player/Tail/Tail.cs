@@ -19,23 +19,33 @@
         private void OnEnable()
         {
             _mover.Moving += OnPlayerMoving;
-            _player.AddTailElement += OnAddTailElement;
+            _player.ChangeTail += OnChangeTail;
         } 
         
         private void OnDisable()
         {
             _mover.Moving -= OnPlayerMoving;
-            _player.AddTailElement -= OnAddTailElement;
+            _player.ChangeTail -= OnChangeTail;
             
         }
 
-        private void OnAddTailElement()
+        private void OnChangeTail(bool addElement)
         {
             var element = _tailElements[_tailElements.Count - 1];
-            element = Instantiate(element, element.transform.position, quaternion.identity, transform);
-            element.name = "element" + (_tailElements.Count + 1);
-            _tailElements.Add(element);
-            
+
+            if (addElement)
+            {
+                element = Instantiate(element, element.transform.position, quaternion.identity, transform);
+                element.name = "element" + (_tailElements.Count + 1);
+                _tailElements.Add(element);
+
+            }
+            else
+            {
+                _tailElements.Remove(element);
+                Destroy(element.gameObject);
+                
+            }
         }
 
         private void OnPlayerMoving()

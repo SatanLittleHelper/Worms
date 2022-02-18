@@ -21,7 +21,7 @@ public abstract class Control : MonoBehaviour
         {
             ChangeDirection(GetPositionInGameBoard(Input.mousePosition));
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
                 SpeedUp?.Invoke();
             if (Input.GetMouseButtonUp(0))
                 SpeedDown?.Invoke();

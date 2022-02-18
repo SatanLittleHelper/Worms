@@ -12,6 +12,7 @@ using UnityEngine;
         private int _minimumScore = 10;
         private int _score;
         private bool _speedUp;
+        private Coroutine _speedUpRoutine;
 
         public event Action<float> SpeedChanged;
         public event Action<int> ScoreChanged;
@@ -38,7 +39,7 @@ using UnityEngine;
             _control.SpeedDown -= OnSpeedDown;
             
         }
-        
+
         private void OnSpeedDown()
         {
            SpeedUp(speedUpEnable:false);
@@ -47,14 +48,15 @@ using UnityEngine;
 
         private void OnSpeedUp()
         {
-            _score = _player.Score;
-            if (_score <= _minimumScore)
-            {
-                SpeedUp(speedUpEnable:false);
-                return;
-            }
-            SpeedUp(speedUpEnable: true);
+           SpeedUp(SpeedUpPosible());
        
+        }
+
+        private bool SpeedUpPosible()
+        {
+            _score = _player.Score;
+            return _score > _minimumScore;
+            
         }
 
         private void SpeedUp(bool speedUpEnable)
@@ -64,13 +66,19 @@ using UnityEngine;
                 _playerSpeed = _defaultPlayerSpeed;
                 _speedUp = false;
                 
+                if (_speedUpRoutine == null) return;
+                
+                StopCoroutine(_speedUpRoutine);
+                
             }
             else
             {
                 if (_speedUp) return;
+                
                 _speedUp = true;
                 _playerSpeed *= 2;
-                StartCoroutine(SpeedUpRoutine());
+               
+                _speedUpRoutine =  StartCoroutine(SpeedUpRoutine());
 
             }
             SpeedChanged?.Invoke(_playerSpeed);
@@ -82,6 +90,7 @@ using UnityEngine;
             while (_speedUp)
             {
                 ScoreChanged?.Invoke(-1);
+                SpeedUp(SpeedUpPosible());
                 yield return new WaitForSeconds(0.5f);
 
             }

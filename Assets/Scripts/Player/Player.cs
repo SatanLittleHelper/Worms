@@ -8,17 +8,26 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
    [SerializeField] private float _speed = 5;
+   [SerializeField] private int _tailElementPrice = 5;
    private Mouth _mouth;
    private SpeedUpControl _speedUpControl;
-   private int _score = 10;
+
+   #region Events
 
    public event Action Die;
-   public event Action AddTailElement;
-   
+   public event Action<bool> ChangeTail;
+   public event Action<int> ScoreChanged;
+
+   #endregion
+
+   #region Properties
+
    public Vector3 Direction { get; set; } = Vector3.left;
    public float Speed => _speed;
-   public int Score => _score;
+   public int Score { get; private set; } = 10;
 
+   #endregion
+  
    private void Awake()
    {
        _mouth = GetComponentInChildren<Mouth>();
@@ -26,18 +35,11 @@ public class Player : MonoBehaviour
 
    }
 
-   private void Update()
-   {
-       Debug.Log(_score);
-       
-   }
-
    private void OnEnable()
    {
        _mouth.Eat += OnEat;
        _speedUpControl.ScoreChanged += OnScoreChanged;
        _speedUpControl.SpeedChanged += OnSpeedChanged;
-
 
    }
 
@@ -57,21 +59,29 @@ public class Player : MonoBehaviour
 
    private void OnScoreChanged(int score)
    {
-       _score += score;
+       ChangeScore(score);
+       ChangeTailElementCount(addElement: false);
        
    }
 
    private void OnEat(int count)
    {
-       _score += count;
-       CheckScoreForAddTailElement();
+       ChangeScore(count);
+       ChangeTailElementCount(addElement: true);
        
    }
 
-   private void CheckScoreForAddTailElement()
+   private void ChangeScore(int score)
    {
-       if (_score % 2 == 0)
-           AddTailElement?.Invoke();
+       Score += score;
+       ScoreChanged?.Invoke(Score);
+
+   }
+
+   private void ChangeTailElementCount(bool addElement)
+   {
+       if (Score % _tailElementPrice != 0 || Score <= 10) return;
+       ChangeTail?.Invoke(addElement);
        
    }
 
@@ -80,5 +90,7 @@ public class Player : MonoBehaviour
        
        if (other.TryGetComponent(typeof(GameDesk), out _))
            Die?.Invoke();
+       
    }
+   
 }

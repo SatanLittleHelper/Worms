@@ -12,7 +12,7 @@
 
         private void Awake()
         {
-            _player = FindObjectOfType<Player>();
+            _player = GetComponent<Player>();
             _control = _player.GetComponent<Control>();
             StartMove();
             
