@@ -5,8 +5,9 @@ public abstract class Control : MonoBehaviour
     {
         private Player _player;
         private Camera _camera;
+        private Vector3 _lastDirection;
 
-        public event Action DirectionChanged;
+        public event Action<Vector3> DirectionChanged;
         public event Action SpeedUp;
         public event Action SpeedDown;
         
@@ -31,10 +32,13 @@ public abstract class Control : MonoBehaviour
 
         private void ChangeDirection(Vector3 target)
         {
+                
             var direction = target - _player.transform.position;
             direction.z = 0;
-            _player.Direction = direction.normalized;
-            DirectionChanged?.Invoke();
+            if (_lastDirection.normalized == direction.normalized) return;
+            
+            DirectionChanged?.Invoke(direction.normalized);
+            _lastDirection = direction;
 
         }
 
